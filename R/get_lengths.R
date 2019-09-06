@@ -39,7 +39,7 @@
 #' @export
 
 
-get_lengths <- function(channel, year=1994, species="all", sex="all", marketCode = F){
+get_lengths <- function(channel, year=1994, species="all", sex="all", marketCode = T){
 
   if ((year == "all") & (species == "all")) stop("Can not pull all species and all years. Too much data!!")
 
@@ -78,7 +78,7 @@ get_lengths <- function(channel, year=1994, species="all", sex="all", marketCode
 
 
   # eventually user will be able to pass these variables
-  sqlStatement <- "select YEAR, MON, NEGEAR, NESPP4, LATHBEG, LONHBEG, AREA, SEX, LENANML, NUMLEN
+  sqlStatement <- "select YEAR, MONTH, NEGEAR, NESPP4, LATHBEG, LONHBEG, AREA, SEX, LENANML, NUMLEN
                     from obdbs.oblen"
 
   sqlStatement <- paste(sqlStatement,whereStr)

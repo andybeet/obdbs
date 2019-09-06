@@ -2,5 +2,5 @@
 
 export(connect_to_database)
 export(get_anything_sql)
+export(get_lengths)
 export(get_species)
-export(get_weight_length)
