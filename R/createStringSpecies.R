@@ -1,5 +1,6 @@
 ##' Utility function (Internal, not exported) to convert argument to strings
 ##'
+##' Deal explicity with NESPP3 and NESPP4 codes.
 ##' inputs to get_ functions are required as strings when passed as a sql statement
 ##' This function converts numeric inputs to character strings
 ##'
@@ -12,8 +13,8 @@
 ##'
 ##' @examples
 ##' \dontrun{
-##' createString(itemName="area",area=503,convertToCharacter=TRUE,numChars=3)
-##' createString(itemName="species_itis",species,convertToCharacter=TRUE,numChars=6)
+##' createStringSpecies(itemName="area",area=503,convertToCharacter=TRUE,numChars=3)
+##' createStringSpecies(itemName="species_itis",species,convertToCharacter=TRUE,numChars=6)
 ##'
 ##' }
 ##'
@@ -22,6 +23,7 @@
 
 createStringSpecies <- function(itemName,chosenItem,convertToCharacter,numChars) {
 
+  nZeros <- numChars-nchar(chosenItem)
   if (is.numeric(chosenItem) && (convertToCharacter==TRUE)) { # need to convert numeric to character for sql
     str <- sprintf(paste0("%0",numChars,"d"),chosenItem)
     str <- paste0("'", str, "%'", collapse=", ")
@@ -32,7 +34,9 @@ createStringSpecies <- function(itemName,chosenItem,convertToCharacter,numChars)
     if (tolower(chosenItem)=="all"){
       itemStr <-  NULL
     } else {
-      stop(paste0("Not coded for yet -- createString:",itemName," with ",chosenItem))
+      str <- paste0("'",rep(0,nZeros), chosenItem, "%'", collapse=", ")
+      itemStr <-  paste0(" (",itemName," like (",str,"))")
+      #stop(paste0("Not coded for yet -- createString:",itemName," with ",chosenItem))
     }
 
   }

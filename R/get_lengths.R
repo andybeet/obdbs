@@ -4,8 +4,8 @@
 #'This data is extracted from oblen
 #'
 #' @param channel an RODBC object (see \code{\link{connect_to_database}})
-#' @param species a specific species code or set of codes. Either numeric or character vector. Defaults to "all" species.
-#' Numeric codes are converted to VARCHAR2(4 BYTE) when creating the sql statement. Character codes are short character strings.
+#' @param species a specific species code (NESPP3) or set of codes. Either numeric or character vector. Defaults to "all" species.
+#' Numeric codes are converted to VARCHAR2(3 BYTE) when creating the sql statement. Character codes are short character strings.
 #' @param sex character vector. Default = "all". options "M" (male), "F" (female), "U" (unsexed)
 #'
 #' @return A list is returned:
@@ -39,19 +39,15 @@
 #' @export
 
 
-get_lengths <- function(channel, year=1994, species="all", sex="all", marketCode = T){
+get_lengths <- function(channel, year=1994, species="all", sex="all"){
 
   if ((year == "all") & (species == "all")) stop("Can not pull all species and all years. Too much data!!")
 
-  # create an SQL query to extract all relavent data from tables
+    # create an SQL query to extract all relavent data from tables
   # list of strings to build where clause in sql statement
   whereVec <- list()
 
-  if (marketCode == T) {
-    whereVec[[1]] <-  createString(itemName="nespp4",species,convertToCharacter=TRUE,numChars=4)
-  } else { # makes last digit wildcard
-    whereVec[[3]] <-  createStringSpecies(itemName="nespp4",species,convertToCharacter=TRUE,numChars=4)
-  }
+  whereVec[[1]] <-  createStringSpecies(itemName="nespp4",species,convertToCharacter=TRUE,numChars=3)
 
   # sex conversion
   if (tolower(sex) == "all") {
@@ -82,6 +78,7 @@ get_lengths <- function(channel, year=1994, species="all", sex="all", marketCode
                     from obdbs.oblen"
 
   sqlStatement <- paste(sqlStatement,whereStr)
+
   # call database
   query <- RODBC::sqlQuery(channel,sqlStatement,errors=TRUE,as.is=TRUE)
 
@@ -89,7 +86,7 @@ get_lengths <- function(channel, year=1994, species="all", sex="all", marketCode
   sqlcolName <- "select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = 'OBLEN' and owner='OBDBS';"
   colNames <- RODBC::sqlQuery(channel,sqlcolName,errors=TRUE,as.is=TRUE)
 
-  return (list(data=query,sql=sqlStatement, colNames=colNames))
+  return (list(data=dplyr::as_tibble(query),sql=sqlStatement, colNames=colNames))
 }
 
 

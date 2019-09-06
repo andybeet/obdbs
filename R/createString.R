@@ -32,7 +32,8 @@ createString <- function(itemName,chosenItem,convertToCharacter,numChars) {
     if (tolower(chosenItem)=="all"){
       itemStr <-  NULL
     } else {
-      stop(paste0("Not coded for yet -- createString:",itemName," with ",chosenItem))
+      itemStr <-  paste0(" (",itemName," in (",toString(chosenItem),"))")
+      #stop(paste0("Not coded for yet -- createString:",itemName," with ",chosenItem))
     }
 
   }

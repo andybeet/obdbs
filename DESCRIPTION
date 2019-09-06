@@ -1,16 +1,14 @@
 Package: obdbs
 Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
-Authors@R: 
-    person(given = "First",
-           family = "Last",
-           role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: What license it uses
+Version: 0.1.0.9000
+Authors@R: c(person("Andy", "Beet", email = "andrew.beet@noaa.gov", role = c("aut"", "cre"))
+Description: The NEFSC Observer database holds data from 1989-present.
+    Pull data by species, length, area, gear type, etc.
+    Examine contents of supporting tables in OBDBS.
+License: file LICENSE -  Strictly for NOAA employees and contractors with database privilages
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
 Imports: 
-    cfdbs
+    cfdbs,
+    dplyr

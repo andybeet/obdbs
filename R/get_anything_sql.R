@@ -54,7 +54,7 @@ get_anything_sql <- function(channel,sqlStatement) {
   sqlcolName <- "select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = 'MV_CF_LANDINGS' and owner='STOCKEFF';"
   colNames <- RODBC::sqlQuery(channel,sqlcolName,errors=TRUE,as.is=TRUE)
 
-  return (list(data=query, sql = sqlStatement,colNames=colNames))
+  return (list(data=dplyr::as_tibble(query), sql = sqlStatement,colNames=colNames))
 
 }
 
