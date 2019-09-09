@@ -24,15 +24,11 @@
 #'
 #' @examples
 #' \dontrun{
-#' # extracts info for cod (73)
+#' # extracts info for american flounder (plaice) (124)
 #' channel <- connect_to_database(server="name_of_server",uid="individuals_username")
-#' get_length_age(channel,species=73)
+#' get_length_age(channel,species=124)
+#' get_length_age(channel,species="124")
 #'
-#' # extracts info for cod ("COD")
-#' channel <- connect_to_database(server="name_of_server",uid="individuals_username")
-#' get_length_age(channel,"cod") or
-#' get_length_age(channel,"co") or
-#' get_length_age(channel,"COD")
 #'
 #'}
 #'
