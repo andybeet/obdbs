@@ -5,7 +5,8 @@
 #'
 #' @param channel an RODBC object (see \code{\link{connect_to_database}})
 #' @param species a specific species code (NESPP3) or set of codes. Either numeric or character vector. Defaults to "all" species.
-#' Numeric codes are converted to VARCHAR2(3 BYTE) when creating the sql statement. Character codes are short character strings.
+#' #' Numeric codes are converted to VARCHAR2(3 BYTE) when creating the sql statement. Character codes are short character strings.
+#' @param year a numeric vector containing the years to search over
 #' @param sex character vector. Default = "all". options "M" (male), "F" (female), "U" (unsexed)
 #'
 #' @return A list is returned:
@@ -35,15 +36,18 @@
 #' @export
 
 
-get_lengths <- function(channel, year=1994, species="all", sex="all"){
+get_lengths <- function(channel, species="all", year=1994,  sex="all"){
 
-  if ((year == "all") & (species == "all")) stop("Can not pull all species and all years. Too much data!!")
+  if (length(year) == 1) {
+    if ((year == "all") & (species == "all")) stop("Can not pull all species and all years. Too much data!!")
+  }
 
     # create an SQL query to extract all relavent data from tables
   # list of strings to build where clause in sql statement
   whereVec <- list()
 
   whereVec[[1]] <-  createStringSpecies(itemName="nespp4",species,convertToCharacter=TRUE,numChars=3)
+  whereVec[[2]] <-  createString(itemName="year",year,convertToCharacter=TRUE,numChars=4)
 
   # sex conversion
   if (tolower(sex) == "all") {

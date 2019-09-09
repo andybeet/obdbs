@@ -4,14 +4,15 @@
 \alias{get_lengths}
 \title{Extract Length data from obdbs}
 \usage{
-get_lengths(channel, year = 1994, species = "all", sex = "all",
-  marketCode = F)
+get_lengths(channel, year = 1994, species = "all", sex = "all")
 }
 \arguments{
 \item{channel}{an RODBC object (see \code{\link{connect_to_database}})}
 
-\item{species}{a specific species code or set of codes. Either numeric or character vector. Defaults to "all" species.
-Numeric codes are converted to VARCHAR2(4 BYTE) when creating the sql statement. Character codes are short character strings.}
+\item{year}{a numeric vector containing the years to search over}
+
+\item{species}{a specific species code (NESPP3) or set of codes. Either numeric or character vector. Defaults to "all" species.
+#' Numeric codes are converted to VARCHAR2(3 BYTE) when creating the sql statement. Character codes are short character strings.}
 
 \item{sex}{character vector. Default = "all". options "M" (male), "F" (female), "U" (unsexed)}
 }
@@ -36,15 +37,11 @@ Note: species codes (nespp4) are stored in the database as VARCHAR2(4 BYTE)
 
 \examples{
 \dontrun{
-# extracts info for cod (73)
+# extracts info for american flounder (plaice) (124)
 channel <- connect_to_database(server="name_of_server",uid="individuals_username")
-get_length_age(channel,species=73)
+get_length_age(channel,species=124)
+get_length_age(channel,species="124")
 
-# extracts info for cod ("COD")
-channel <- connect_to_database(server="name_of_server",uid="individuals_username")
-get_length_age(channel,"cod") or
-get_length_age(channel,"co") or
-get_length_age(channel,"COD")
 
 }
 
