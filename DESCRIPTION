@@ -12,3 +12,7 @@ RoxygenNote: 6.1.1
 Imports: 
     cfdbs,
     dplyr
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

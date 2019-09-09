@@ -1,0 +1,62 @@
+---
+title: "Using OBDBS"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo = F}
+library(obdbs)
+data_124$data <- dplyr::as_tibble(data_124$data)
+```
+
+OBDBS is the NEFSC observer program database. Details regarding the list of table and fields present can be found in the data [dictionary](http://nova.nefsc.noaa.gov/datadict/). To access any data you will need login credentials to the server and priviledges to access to the tables
+
+## get_lengths
+
+To obtain length data for a given species you will first need to connect to the database with your credentials
+```{r login, echo=T , eval = F}
+channel <- connect_to_database("nova","username")
+```
+
+Then you can get length data for say, american flounder (plaice), using its nespp3 code (124)
+```{r get_length, echo=T , eval = F}
+data_124 <- get_lengths(channel, species = "124", year = 1999)
+```
+
+or 
+
+```{r get_length2, echo=T , eval = F}
+data_124 <- get_lengths(channel, species = 124, year = 1999)
+```
+
+## Output
+
+output from all functions will have the same form. A list containing three elements:
+
+1. the data pull
+2. the sql statement used in the pull
+3. A list of all columns in the table. (Provided in case the user wishes to extend the query using `get_anything_sql`)
+
+For example:
+
+```{r sampledata, echo=T, eval= T }
+# The data
+data_124$data
+
+# All column/field names in the table
+data_124$colNames
+
+# The sql statement
+data_124$sql
+
+```
