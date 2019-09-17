@@ -93,8 +93,8 @@ get_absence_presence <- function(channel, species="all", year=1994,  sex="all", 
   # process the data to include absence/presence (0/1) for species listed.
   # left join
   join <- dplyr::left_join(uniqueTrips,query,by=c('YEAR', 'MONTH', 'TRIPID', 'HAULNUM', 'NEGEAR', "LATHBEG", "LONHBEG", "AREA"))
-  join$NESPP4[!is.na(join$NESPP4)] <- 1
-  join$NESPP4[is.na(join$NESPP4)] <- 0
+  join$NESPP4[!is.na(join$NESPP4)] <- as.numeric(1)
+  join$NESPP4[is.na(join$NESPP4)] <- as.numeric(0)
   # rename new column
   colnames(join)[colnames(join) == "NESPP4"] <- "Presence"
 
