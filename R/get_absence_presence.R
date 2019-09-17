@@ -81,12 +81,13 @@ get_absence_presence <- function(channel, species="all", year=1994,  sex="all", 
   uniqueTrips <- RODBC::sqlQuery(channel,sqlTrip,errors=TRUE,as.is=TRUE)
 
   # eventually user will be able to pass these variables
+  # sql to get species data
   sqlStatement <- "select distinct YEAR, MONTH, TRIPID, HAULNUM, NEGEAR, NESPP4, LATHBEG, LONHBEG, AREA
                     from obdbs.obspp"
 
   sqlStatement <- paste(sqlStatement,whereStr)
 
-  # call database
+  # call database to get species data
   query <- RODBC::sqlQuery(channel,sqlStatement,errors=TRUE,as.is=TRUE)
 
   # process the data to include absence/presence (0/1) for species listed.
@@ -94,7 +95,7 @@ get_absence_presence <- function(channel, species="all", year=1994,  sex="all", 
   join <- dplyr::left_join(uniqueTrips,query,by=c('YEAR', 'MONTH', 'TRIPID', 'HAULNUM', 'NEGEAR', "LATHBEG", "LONHBEG", "AREA"))
   join$NESPP4[!is.na(join$NESPP4)] <- 1
   join$NESPP4[is.na(join$NESPP4)] <- 0
-
+  # rename new column
   colnames(join)[colnames(join) == "NESPP4"] <- "Presence"
 
   # column names
