@@ -1,13 +1,15 @@
-#' Extract Length data from obdbs
+#' Extract absence-presence data from obdbs
 #'
-#'Extract a list of length for speices sampled by observers on commercial fishing boats
-#'This data is extracted from oblen
+#' For a specified region of interest, extracts all hauls and indicates presence or absence for
+#' species of interest. Sampled by observers on commercial fishing boats
+#' This data is extracted from obspp
 #'
-#' @param channel an RODBC object (see \code{\link{connect_to_database}})
-#' @param species a specific species code (NESPP3) or set of codes. Either numeric or character vector. Defaults to "all" species.
+#' @param channel RODBC object (see \code{\link{connect_to_database}})
+#' @param species Numeric Vector. a specific species code (NESPP3) or set of codes. Defaults to "all" species.
 #' #' Numeric codes are converted to VARCHAR2(3 BYTE) when creating the sql statement. Character codes are short character strings.
-#' @param year a numeric vector containing the years to search over
-#' @param sex character vector. Default = "all". options "M" (male), "F" (female), "U" (unsexed)
+#' @param year Numeric vector. Years to search over
+#' @param sex Character string. Default = "all". options "M" (male), "F" (female), "U" (unsexed)
+#' @param area Character vector. Statistical areas. Default = "all".
 #'
 #' @return A list is returned:
 #'
@@ -25,28 +27,28 @@
 #'
 #' @examples
 #' \dontrun{
-#' # extracts info for american flounder (plaice) (124)
+#' # extracts info for american flounder (plaice) (124) in stat areas 512 to 514 for years 2000 - 2017
 #' channel <- connect_to_database(server="name_of_server",uid="individuals_username")
-#' get_lengths(channel, species=124, year = "all")
-#' get_lengths(channel, species="124", year = 2000, sex = "M")
+#' get_absence_presence(channel,species=124, area = c(512:514), year=c(2000:2017))
 #'
 #'}
 #'
 #' @export
 
 
-get_lengths <- function(channel, species="all", year=1994,  sex="all"){
+get_absence_presence <- function(channel, species="all", year=1994,  sex="all", area ="all"){
 
-  if (length(year) == 1) {
+  if ((length(year) == 1) & (length(species) == 1)) {
     if ((year == "all") & (species == "all")) stop("Can not pull all species and all years. Too much data!!")
   }
 
-    # create an SQL query to extract all relavent data from tables
+  # create an SQL query to extract all relavent data from tables
   # list of strings to build where clause in sql statement
   whereVec <- list()
 
   whereVec[[1]] <-  createStringSpecies(itemName="nespp4",species,convertToCharacter=TRUE,numChars=3)
   whereVec[[2]] <-  createString(itemName="year",year,convertToCharacter=TRUE,numChars=4)
+  whereVec[[3]] <-  createString(itemName="area",area,convertToCharacter=TRUE,numChars=3)
 
   # sex conversion
   if (tolower(sex) == "all") {
@@ -58,6 +60,7 @@ get_lengths <- function(channel, species="all", year=1994,  sex="all"){
   }
 
   whereVec[[4]] <-  paste("sex in (",toString(sex),")")
+  whereVec[[5]] <-  paste("OBSRFLAG = 1")
 
   # build where clause of SQL statement based on input above
   whereStr <- "where"
@@ -73,13 +76,22 @@ get_lengths <- function(channel, species="all", year=1994,  sex="all"){
 
 
   # eventually user will be able to pass these variables
-  sqlStatement <- "select YEAR, MONTH, NEGEAR, NESPP4, LATHBEG, LONHBEG, AREA, SEX, LENANML, NUMLEN
-                    from obdbs.oblen"
+  sqlStatement <- "select YEAR, MONTH, TRIPID, HAULNUM, NEGEAR, NESPP4, LATHBEG, LONHBEG, AREA, SEX
+                    from obdbs.obspp"
 
   sqlStatement <- paste(sqlStatement,whereStr)
 
+  print(sqlStatement)
+
   # call database
   query <- RODBC::sqlQuery(channel,sqlStatement,errors=TRUE,as.is=TRUE)
+
+  # process the data to include absence/presence (0/1) for species listed.
+  # left join
+  # expand.grid(YEAR = year, MONTH = c(1:12),TRIPHAUL = unique(triphaul))
+
+
+
 
   # column names
   sqlcolName <- "select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = 'OBLEN' and owner='OBDBS';"
