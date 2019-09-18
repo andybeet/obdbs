@@ -73,7 +73,7 @@ get_lengths <- function(channel, species="all", year=1994,  sex="all"){
 
 
   # eventually user will be able to pass these variables
-  sqlStatement <- "select YEAR, MONTH, NEGEAR, NESPP4, LATHBEG, LONHBEG, AREA, SEX, LENANML, NUMLEN
+  sqlStatement <- "select YEAR, MONTH, TRIPID,HAULNUL,NEGEAR, NESPP4, LATHBEG, LONHBEG, AREA, SEX, LENANML, NUMLEN
                     from obdbs.oblen"
 
   sqlStatement <- paste(sqlStatement,whereStr)
