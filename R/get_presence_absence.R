@@ -75,9 +75,22 @@ get_absence_presence <- function(channel, species="all", year=1994,  sex="all", 
     whereStr <- paste(whereStr,item,"and")
   }
 
+  # build where clause of SQL statement based on input above from Trip pull
+  whereStrTrip <- NULL
+  for (item in whereVec) {
+    if (is.null(item)) {next}
+    if (grepl("nespp4",item)){next}
+    if (which(item == whereVec) == length(whereVec)) {
+      whereStrTrip <- paste(whereStrTrip,item)
+      next
+    }
+    whereStrTrip <- paste(whereStrTrip,item,"and")
+  }
+
   # find unique trips in area and time of interest
-  sqlTrip <- paste0("select distinct YEAR, MONTH, TRIPID, HAULNUM, AREA, NEGEAR, LATHBEG, LONHBEG from obdbs.obspp where"
-  , whereVec[2] ," and ",whereVec[3])
+
+  sqlTrip <- paste0("select distinct YEAR, MONTH, TRIPID, HAULNUM, AREA, NEGEAR, LATHBEG, LONHBEG from obdbs.obspp ")
+  if (!is.null(whereStrTrip)) {  sqlTrip <- paste(sqlTrip," where ",whereStrTrip)}
   uniqueTrips <- RODBC::sqlQuery(channel,sqlTrip,errors=TRUE,as.is=TRUE)
 
   # eventually user will be able to pass these variables
@@ -86,9 +99,11 @@ get_absence_presence <- function(channel, species="all", year=1994,  sex="all", 
                     from obdbs.obspp"
 
   sqlStatement <- paste(sqlStatement,whereStr)
-
+print(sqlTrip)
   # call database to get species data
   query <- RODBC::sqlQuery(channel,sqlStatement,errors=TRUE,as.is=TRUE)
+
+  return (list(speciesOnly = dplyr::as_tibble(query),tripOnly=dplyr::as_tibble(uniqueTrips),sql=sqlStatement))
 
   # process the data to include absence/presence (0/1) for species listed.
   # left join
