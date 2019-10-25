@@ -48,9 +48,9 @@ get_absence_presence <- function(channel, species="all", year=1994,  sex="all", 
   # list of strings to build where clause in sql statement
   whereVec <- list()
 
-  whereVec[[1]] <-  createStringSpecies(itemName="nespp4",species,convertToCharacter=TRUE,numChars=3)
-  whereVec[[2]] <-  createString(itemName="year",year,convertToCharacter=TRUE,numChars=4)
-  whereVec[[3]] <-  createString(itemName="area",area,convertToCharacter=TRUE,numChars=3)
+  whereVec[[1]] <-  dbutils::createStringSpecies(itemName="nespp4",species,convertToCharacter=TRUE,numChars=3)
+  whereVec[[2]] <-  dbutils::createString(itemName="year",year,convertToCharacter=TRUE,numChars=4)
+  whereVec[[3]] <-  dbutils::createString(itemName="area",area,convertToCharacter=TRUE,numChars=3)
 
   # # sex conversion
   # if (tolower(sex) == "all") {
@@ -99,11 +99,11 @@ get_absence_presence <- function(channel, species="all", year=1994,  sex="all", 
                     from obdbs.obspp"
 
   sqlStatement <- paste(sqlStatement,whereStr)
-print(sqlTrip)
+
   # call database to get species data
   query <-  DBI::dbGetQuery(channel,sqlStatement)
 
-  return (list(speciesOnly = dplyr::as_tibble(query),tripOnly=dplyr::as_tibble(uniqueTrips),sql=sqlStatement))
+  #return (list(speciesOnly = dplyr::as_tibble(query),tripOnly=dplyr::as_tibble(uniqueTrips),sql=sqlStatement))
 
   # process the data to include absence/presence (0/1) for species listed.
   # left join

@@ -45,8 +45,8 @@ get_lengths <- function(channel, species="all", year=1994,  sex="all"){
   # list of strings to build where clause in sql statement
   whereVec <- list()
 
-  whereVec[[1]] <-  createStringSpecies(itemName="nespp4",species,convertToCharacter=TRUE,numChars=3)
-  whereVec[[2]] <-  createString(itemName="year",year,convertToCharacter=TRUE,numChars=4)
+  whereVec[[1]] <-  dbutils::createStringSpecies(itemName="nespp4",species,convertToCharacter=TRUE,numChars=3)
+  whereVec[[2]] <-  dbutils::createString(itemName="year",year,convertToCharacter=TRUE,numChars=4)
 
   # sex conversion
   if (tolower(sex) == "all") {
