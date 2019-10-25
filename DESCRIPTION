@@ -11,7 +11,9 @@ LazyData: true
 RoxygenNote: 6.1.1
 Imports: 
     cfdbs,
-    dplyr
+    dplyr,
+    DBI,
+    odbc
 Suggests: 
     knitr,
     rmarkdown

@@ -32,7 +32,8 @@ connect_to_database  <-  function(server,uid){
   # connects to DB and catches errors and warnings
     chan <- tryCatch(
       {
-        RODBC::odbcConnect(server,uid=uid,pwd=pwd)
+        DBI::dbConnect(odbc::odbc(), dsn=server,uid=uid,pwd=pwd, timeout = 10)
+
         #message(paste0("Successfully connected to Database: ",server))
       }, warning=function(w) {
         if (grepl("logon denied",w)) {message("logon to server failed - Check username and password")}

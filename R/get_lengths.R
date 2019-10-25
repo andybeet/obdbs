@@ -73,17 +73,17 @@ get_lengths <- function(channel, species="all", year=1994,  sex="all"){
 
 
   # eventually user will be able to pass these variables
-  sqlStatement <- "select YEAR, MONTH, TRIPID,HAULNUL,NEGEAR, NESPP4, LATHBEG, LONHBEG, AREA, SEX, LENANML, NUMLEN
+  sqlStatement <- "select YEAR, MONTH, TRIPID,HAULNUM,NEGEAR, NESPP4, LATHBEG, LONHBEG, AREA, SEX, LENANML, NUMLEN
                     from obdbs.oblen"
 
   sqlStatement <- paste(sqlStatement,whereStr)
 
   # call database
-  query <- RODBC::sqlQuery(channel,sqlStatement,errors=TRUE,as.is=TRUE)
+  query <- DBI::dbGetQuery(channel,sqlStatement)
 
   # column names
   sqlcolName <- "select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = 'OBLEN' and owner='OBDBS';"
-  colNames <- RODBC::sqlQuery(channel,sqlcolName,errors=TRUE,as.is=TRUE)
+  colNames <- DBI::dbGetQuery(channel,sqlcolName)
 
   return (list(data=dplyr::as_tibble(query),sql=sqlStatement, colNames=colNames))
 }

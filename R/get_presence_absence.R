@@ -91,7 +91,7 @@ get_absence_presence <- function(channel, species="all", year=1994,  sex="all", 
 
   sqlTrip <- paste0("select distinct YEAR, MONTH, TRIPID, HAULNUM, AREA, NEGEAR, LATHBEG, LONHBEG from obdbs.obspp ")
   if (!is.null(whereStrTrip)) {  sqlTrip <- paste(sqlTrip," where ",whereStrTrip)}
-  uniqueTrips <- RODBC::sqlQuery(channel,sqlTrip,errors=TRUE,as.is=TRUE)
+  uniqueTrips <- DBI::dbGetQuery(channel,sqlTrip)
 
   # eventually user will be able to pass these variables
   # sql to get species data
@@ -101,7 +101,7 @@ get_absence_presence <- function(channel, species="all", year=1994,  sex="all", 
   sqlStatement <- paste(sqlStatement,whereStr)
 print(sqlTrip)
   # call database to get species data
-  query <- RODBC::sqlQuery(channel,sqlStatement,errors=TRUE,as.is=TRUE)
+  query <-  DBI::dbGetQuery(channel,sqlStatement)
 
   return (list(speciesOnly = dplyr::as_tibble(query),tripOnly=dplyr::as_tibble(uniqueTrips),sql=sqlStatement))
 
@@ -115,7 +115,7 @@ print(sqlTrip)
 
   # column names
   sqlcolName <- "select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME = 'OBLEN' and owner='OBDBS';"
-  colNames <- RODBC::sqlQuery(channel,sqlcolName,errors=TRUE,as.is=TRUE)
+  colNames <-  DBI::dbGetQuery(channel,sqlcolName)
 
   return (list(data=dplyr::as_tibble(join),speciesOnly = dplyr::as_tibble(query),tripOnly=dplyr::as_tibble(uniqueTrips),sql=sqlStatement, colNames=colNames))
 }
