@@ -39,9 +39,8 @@ Note: species codes (nespp4) are stored in the database as VARCHAR2(4 BYTE)
 \dontrun{
 # extracts info for american flounder (plaice) (124)
 channel <- connect_to_database(server="name_of_server",uid="individuals_username")
-get_length_age(channel,species=124)
-get_length_age(channel,species="124")
-
+get_lengths(channel, species=124, year = "all")
+get_lengths(channel, species="124", year = 2000, sex = "M")
 
 }
 
