@@ -1,5 +1,5 @@
 Package: obdbs
-Title: What the Package Does (One Line, Title Case)
+Title: Pulls data from the NEFSC observer database
 Version: 0.1.0.9000
 Authors@R: person("Andy", "Beet", email = "andrew.beet@noaa.gov", role = c("aut", "cre"))
 Description: The NEFSC Observer database holds data from 1989-present.
