@@ -1,6 +1,6 @@
 # obdbs: In Development
 
-![gitleaks](https://github.com/NOAA-EDAB/LeMANS/workflows/gitleaks/badge.svg)
+![gitleaks](https://github.com/andybeet/obdbs/workflows/gitleaks/badge.svg)
 
 
 A suite of tools to easily extract data from obdbs and supporting tables
